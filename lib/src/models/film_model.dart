@@ -62,6 +62,12 @@ class Film {
     voteAverage = json['vote_average'] / 1;
     voteCount = json['vote_count'];
   }
+
+  getPosterImg(){
+    if (posterPath == null) return 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg';
+    
+    return 'https://image.tmdb.org/t/p/w500$posterPath';
+  }
 }
 
 

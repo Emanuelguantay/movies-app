@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:movies_app/src/providers/film_provider.dart';
 import 'package:movies_app/src/widgets/card_swiper_widget.dart';
 
 class HomePage extends StatelessWidget {
+  FilmProvider filmProvider = new FilmProvider();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,24 +13,27 @@ class HomePage extends StatelessWidget {
         centerTitle: false,
         title: Text('Peliculas de cine'),
         backgroundColor: Colors.indigoAccent,
-        actions: [
-          IconButton(icon: Icon(Icons.search), onPressed: (){})
-        ],
+        actions: [IconButton(icon: Icon(Icons.search), onPressed: () {})],
       ),
       body: Container(
-        child: Column(children:[
-          _swiperCards()
-        ]),
+        child: Column(children: [_swiperCards()]),
       ),
-      
     );
   }
-  
+
   _swiperCards() {
-    FilmProvider filmProvider = new FilmProvider();
-    filmProvider.getFilmsInCinema();
-    
-    return CardSwiper(list: [1,2,3,4]);
+    return FutureBuilder(
+      future: filmProvider.getFilmsInCinema(),
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if (snapshot.hasData) {
+          return CardSwiper(list: snapshot.data);
+        } else {
+          return Container(
+              height: 400, child: Center(child: CircularProgressIndicator()));
+        }
+      },
+    );
+
     // return Container(
     //   padding: EdgeInsets.only(top:10),
     //   width: double.infinity,
