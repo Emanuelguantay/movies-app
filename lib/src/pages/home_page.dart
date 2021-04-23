@@ -9,6 +9,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    filmProvider.getPopular();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -73,17 +75,28 @@ class HomePage extends StatelessWidget {
             child: Text("Populares", style: Theme.of(context).textTheme.subtitle1),
           ),
           SizedBox(height: 10),
-          FutureBuilder(
-              future: filmProvider.getPopular(),
+          StreamBuilder(
+              stream: filmProvider.popularStream,
               builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                 if (snapshot.hasData) {
-                  return MovieHorizontal(films: snapshot.data);
+                  return MovieHorizontal(films: snapshot.data, nextPage: filmProvider.getPopular,);
                 } else {
                   return Container(
-                      height: 400,
+                      height: 200,
                       child: Center(child: CircularProgressIndicator()));
                 }
               })
+          // FutureBuilder(
+          //     future: filmProvider.getPopular(),
+          //     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+          //       if (snapshot.hasData) {
+          //         return MovieHorizontal(films: snapshot.data);
+          //       } else {
+          //         return Container(
+          //             height: 200,
+          //             child: Center(child: CircularProgressIndicator()));
+          //       }
+          //     })
         ],
       ),
     );
